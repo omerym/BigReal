@@ -3,11 +3,12 @@
 
 #include <iostream>
 #include "BCDDigit.cpp"
+#include "PackedBCD.cpp"
 
 using namespace std;
 
 int main()
-{
-	BCDDigit t = 3;
-	cout << (t + t.Get10Compliment());
+{	
+	PackedBCD p = 10;
+	cout << p << endl << p.get9Compliment();
 }

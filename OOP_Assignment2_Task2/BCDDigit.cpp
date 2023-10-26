@@ -12,9 +12,15 @@ public:
 	BCDDigit(unsigned int digit = 0);
 	static BCDDigit add(BCDDigit r, BCDDigit l, BCDDigit& carryOut, BCDDigit carryIn = 0);
 	unsigned int getDigit();
-	BCDDigit Get9Compliment();
-	BCDDigit Get10Compliment();
+	BCDDigit get9Compliment();
+	BCDDigit get10Compliment();
 	BCDDigit operator+ (BCDDigit other);
+	bool operator == (BCDDigit other);
+	bool operator != (BCDDigit other);
+	bool operator > (BCDDigit other);
+	bool operator < (BCDDigit other);
+	bool operator <= (BCDDigit other);
+	bool operator >= (BCDDigit other);
 	friend ostream& operator << (ostream& out, BCDDigit num);
 	friend istream& operator >> (istream& in, BCDDigit &num);
 
@@ -45,6 +51,30 @@ BCDDigit BCDDigit::operator+(BCDDigit other)
 	BCDDigit c;
 	return add(*this, other, c);
 }
+bool BCDDigit::operator==(BCDDigit other)
+{
+	return digit = other.digit;
+}
+bool BCDDigit::operator!=(BCDDigit other)
+{
+	return digit != other.digit;
+}
+bool BCDDigit::operator>(BCDDigit other)
+{
+	return digit > other.digit;
+}
+bool BCDDigit::operator<(BCDDigit other)
+{
+	return digit < other.digit;
+}
+bool BCDDigit::operator<=(BCDDigit other)
+{
+	return digit <= other.digit;
+}
+bool BCDDigit::operator>=(BCDDigit other)
+{
+	return digit >= other.digit;
+}
 bool BCDDigit::isValidBCD(unsigned int digit)
 {
 	return digit < 10;
@@ -53,13 +83,13 @@ unsigned int BCDDigit::getDigit()
 {
 	return (unsigned int)digit;
 }
-BCDDigit BCDDigit::Get9Compliment()
+BCDDigit BCDDigit::get9Compliment()
 {
 	return BCDDigit(9 - digit);
 }
-BCDDigit BCDDigit::Get10Compliment()
+BCDDigit BCDDigit::get10Compliment()
 {
-	return BCDDigit(10 - digit);
+	return BCDDigit((10 - digit) % 10);
 }
 
 ostream& operator<<(ostream& out, BCDDigit num)
