@@ -3,7 +3,7 @@
 #
 
 # Add source to this project's executable.
-add_executable (OOP_Assignment2_Task2 "OOP_Assignment2_Task2.cpp" "OOP_Assignment2_Task2.h")
+add_executable (OOP_Assignment2_Task2 "OOP_Assignment2_Task2.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET OOP_Assignment2_Task2 PROPERTY CXX_STANDARD 20)

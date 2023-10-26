@@ -1,12 +1,13 @@
 ﻿// OOP_Assignment2_Task2.cpp : Defines the entry point for the application.
 //
 
-#include "OOP_Assignment2_Task2.h"
+#include <iostream>
+#include "BCDDigit.cpp"
 
 using namespace std;
 
 int main()
 {
-	cout << "Hello CMake." << endl;
-	return 0;
+	BCDDigit t = 3;
+	cout << (t + t.Get10Compliment());
 }
