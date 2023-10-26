@@ -12,6 +12,7 @@ public:
 	PackedBCD(BCDDigit first = 0, BCDDigit second = 0);
 	PackedBCD(unsigned int value);
 	static PackedBCD add(PackedBCD r, PackedBCD l, BCDDigit &carryOut, BCDDigit carryIn = 0);
+	int digitCount();
 	unsigned int getNumber();
 	PackedBCD get9Compliment();
 	PackedBCD get10Compliment();
@@ -53,6 +54,17 @@ PackedBCD PackedBCD::add(PackedBCD r, PackedBCD l, BCDDigit &carryOut, BCDDigit 
 	a1 = BCDDigit::add(a1, b1, carryOut, carryIn);
 	a2 = BCDDigit::add(a2, b2, carryOut, carryOut);
 	return PackedBCD(a1, a2);
+}
+
+int PackedBCD::digitCount()
+{
+	BCDDigit first, second;
+	unPack(first, second);
+	if (second == 0)
+	{
+		return 1;
+	}
+	return 2;
 }
 
 unsigned int PackedBCD::getNumber()

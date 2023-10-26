@@ -44,6 +44,10 @@ BCDDigit BCDDigit::add(BCDDigit r, BCDDigit l, BCDDigit& carryOut, BCDDigit carr
 		result &= 0b1111;
 		carryOut = 1;
 	}
+	else
+	{
+		carryOut = 0;
+	}
 	return BCDDigit(result);
 }
 BCDDigit BCDDigit::operator+(BCDDigit other)
@@ -53,7 +57,7 @@ BCDDigit BCDDigit::operator+(BCDDigit other)
 }
 bool BCDDigit::operator==(BCDDigit other)
 {
-	return digit = other.digit;
+	return digit == other.digit;
 }
 bool BCDDigit::operator!=(BCDDigit other)
 {
