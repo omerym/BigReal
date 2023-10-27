@@ -35,6 +35,7 @@ private:
 	deque<PackedBCD> fraction;
 	bool isValidUnsignedReal(string realNumber);
 	PackedBCD* at(int pos);
+	UnsignedBigReal add(UnsignedBigReal other);
 	// Removes extra zeros
 	void clean();
 	// 1 if > , 0 if == , -1 if <
@@ -112,28 +113,22 @@ int UnsignedBigReal::size()
 }
 UnsignedBigReal UnsignedBigReal::operator-(UnsignedBigReal other)
 {
-	return 0;
+	UnsignedBigReal compliment, result;
+	int compare = UnsignedBigReal::compare(*this, other);
+	if (compare == -1)
+	{
+		throw underflow_error("Unsigned subtraction cannot have negative result.");
+	}
+	if (compare == 0)
+	{
+		//return 0;
+	}
+
+	return result;
 }
 UnsignedBigReal UnsignedBigReal::operator+(UnsignedBigReal other)
 {
-	normalize(*this, other);
-	UnsignedBigReal result;
-	BCDDigit carry;
-	for (int i = fraction.size() - 1; i >= 0; i--)
-	{
-		PackedBCD s = PackedBCD::add(fraction[i], other.fraction[i], carry, carry);
-		result.fraction.push_front(s);
-	}
-	for (int i = integer.size() - 1; i >= 0; i--)
-	{
-		PackedBCD s = PackedBCD::add(integer[i], other.integer[i], carry, carry);
-		result.integer.push_front(s);
-	}
-	result.integer.push_front(carry);
-	clean();
-	other.clean();
-	result.clean();
-	return result;
+	return add(other);
 }
 bool UnsignedBigReal::operator>=(UnsignedBigReal anotherReal)
 {
@@ -230,6 +225,29 @@ PackedBCD* UnsignedBigReal::at(int pos)
 		return &fraction[pos];
 	}
 	throw out_of_range(to_string(pos));
+}
+
+UnsignedBigReal UnsignedBigReal::add(UnsignedBigReal other)
+{
+	normalize(*this, other);
+	this->integer.push_front(0);
+	other.integer.push_front(0);
+	UnsignedBigReal result;
+	BCDDigit carry;
+	for (int i = fraction.size() - 1; i >= 0; i--)
+	{
+		PackedBCD s = PackedBCD::add(fraction[i], other.fraction[i], carry, carry);
+		result.fraction.push_front(s);
+	}
+	for (int i = integer.size() - 1; i >= 0; i--)
+	{
+		PackedBCD s = PackedBCD::add(integer[i], other.integer[i], carry, carry);
+		result.integer.push_front(s);
+	}
+	clean();
+	other.clean();
+	result.clean();
+	return result;
 }
 
 UnsignedBigReal UnsignedBigReal::get9Compliment()

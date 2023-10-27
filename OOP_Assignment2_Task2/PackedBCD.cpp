@@ -22,6 +22,8 @@ public:
 	bool operator < (PackedBCD other);
 	bool operator <= (PackedBCD other);
 	bool operator >= (PackedBCD other);
+	BCDDigit first();
+	BCDDigit second();
 	friend ostream& operator << (ostream& out, PackedBCD num);
 	friend istream& operator >> (istream& in, PackedBCD& num);
 
@@ -114,6 +116,16 @@ bool PackedBCD::operator<=(PackedBCD other)
 bool PackedBCD::operator>=(PackedBCD other)
 {
 	return data >= other.data;
+}
+
+BCDDigit PackedBCD::first()
+{
+	return data & 0b1111;
+}
+
+BCDDigit PackedBCD::second()
+{
+	return data >> 4;
 }
 
 void PackedBCD::pack(BCDDigit first, BCDDigit second)
