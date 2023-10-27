@@ -15,7 +15,6 @@ public:
 	int digitCount();
 	unsigned int getNumber();
 	PackedBCD get9Compliment();
-	PackedBCD get10Compliment();
 	PackedBCD operator+ (PackedBCD other);
 	bool operator == (PackedBCD other);
 	bool operator != (PackedBCD other);
@@ -79,14 +78,7 @@ PackedBCD PackedBCD::get9Compliment()
 	BCDDigit first, second;
 	unPack(first, second);
 	return PackedBCD(first.get9Compliment(),second.get9Compliment());
-}
-
-PackedBCD PackedBCD::get10Compliment()
-{
-	BCDDigit first, second;
-	unPack(first, second);
-	return PackedBCD(first.get10Compliment(), second.get10Compliment());
-}
+} 
 
 PackedBCD PackedBCD::operator+(PackedBCD other)
 {

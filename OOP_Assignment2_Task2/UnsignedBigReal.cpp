@@ -14,13 +14,13 @@ public:
 	UnsignedBigReal(string realNumber);
 	UnsignedBigReal(const char* realNumber) : UnsignedBigReal(string(realNumber)) {}
 	UnsignedBigReal(double realNumber = 0.0) :UnsignedBigReal(to_string(realNumber)) {};
+	UnsignedBigReal(unsigned int realNumber) :UnsignedBigReal(to_string(realNumber)) {};
+	UnsignedBigReal(int realNumber) :UnsignedBigReal(to_string(realNumber)) {};
 	UnsignedBigReal(const UnsignedBigReal& other);
 	void setNum(string realNumber);
 	int size();
-	/*
-	UnsignedBigReal operator- (UnsignedBigReal& other);
-	*/
-	UnsignedBigReal operator+(UnsignedBigReal& other);
+	UnsignedBigReal operator- (UnsignedBigReal other);
+	UnsignedBigReal operator+(UnsignedBigReal other);
 	bool operator>= (UnsignedBigReal anotherReal);
 	bool operator<= (UnsignedBigReal anotherReal);
 	bool operator> (UnsignedBigReal anotherReal);
@@ -29,7 +29,7 @@ public:
 	bool operator== (UnsignedBigReal anotherReal);
 	friend istream& operator >> (istream& in, UnsignedBigReal &num);
 	friend ostream& operator << (ostream& out, UnsignedBigReal num);
-
+	UnsignedBigReal get9Compliment();
 private:
 	deque<PackedBCD> integer;
 	deque<PackedBCD> fraction;
@@ -110,7 +110,11 @@ int UnsignedBigReal::size()
 	}
 	return size;
 }
-UnsignedBigReal UnsignedBigReal::operator+(UnsignedBigReal& other)
+UnsignedBigReal UnsignedBigReal::operator-(UnsignedBigReal other)
+{
+	return 0;
+}
+UnsignedBigReal UnsignedBigReal::operator+(UnsignedBigReal other)
 {
 	normalize(*this, other);
 	UnsignedBigReal result;
@@ -226,6 +230,40 @@ PackedBCD* UnsignedBigReal::at(int pos)
 		return &fraction[pos];
 	}
 	throw out_of_range(to_string(pos));
+}
+
+UnsignedBigReal UnsignedBigReal::get9Compliment()
+{
+	UnsignedBigReal compliment = UnsignedBigReal(*this);
+	int start = integer.empty() ? 0 : 1;
+	for (int i = start; i < integer.size() + fraction.size(); i++)
+	{
+		*compliment.at(i) = compliment.at(i)->get9Compliment();
+	}
+	if (!fraction.empty())
+	{
+		PackedBCD lastDigit = fraction[fraction.size() - 1];
+		unsigned int lastDigitNum = lastDigit.getNumber();
+		if ((lastDigitNum % 10) == 0)
+		{
+			unsigned int x = compliment.fraction[compliment.fraction.size() - 1].getNumber();
+			x -= 9;
+			compliment.fraction[compliment.fraction.size() - 1] = x;
+		}
+	}
+	if (!integer.empty())
+	{
+		if (integer[0] >= 10)
+		{
+			compliment.integer[0] = integer[0].get9Compliment();
+		}
+		else
+		{
+			BCDDigit a = integer[0].getNumber();
+			compliment.integer[0] = a.get9Compliment();
+		}
+	}
+	return compliment;
 }
 
 void UnsignedBigReal::clean()
