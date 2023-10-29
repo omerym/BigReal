@@ -11,8 +11,5 @@ using namespace std;
 
 int main()
 {	
-	UnsignedBigReal x, y;
-	cin >> x >> y;
-	x + y;
-	cout << x - y;
+
 }

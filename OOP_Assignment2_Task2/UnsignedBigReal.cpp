@@ -18,7 +18,7 @@ public:
 	UnsignedBigReal(int realNumber) :UnsignedBigReal(to_string(realNumber)) {};
 	UnsignedBigReal(const UnsignedBigReal& other);
 	void setNum(string realNumber);
-	int size();
+	int digitCount();
 	UnsignedBigReal operator- (UnsignedBigReal other);
 	UnsignedBigReal operator+(UnsignedBigReal other);
 	bool operator>= (UnsignedBigReal anotherReal);
@@ -77,7 +77,7 @@ void UnsignedBigReal::setNum(string realNumber)
 	}
 	clean();
 }
-int UnsignedBigReal::size()
+int UnsignedBigReal::digitCount()
 {
 	return integer.size() + fraction.size();
 }
@@ -92,7 +92,7 @@ UnsignedBigReal UnsignedBigReal::operator-(UnsignedBigReal other)
 	}
 	if (compare == 0)
 	{
-		//return 0;
+		return 0;
 	}
 	return add(compliment, true);
 }
@@ -129,8 +129,8 @@ bool UnsignedBigReal::operator==(UnsignedBigReal anotherReal)
 UnsignedBigReal UnsignedBigReal::getCompliment()
 {
 	UnsignedBigReal x = *this, correction = getZeros();
-	*correction.at(correction.size() - 1) = 1;
-	int start = size() - 1;
+	*correction.at(correction.digitCount() - 1) = 1;
+	int start = digitCount() - 1;
 	for (int i = start; i >= 0; i--)
 	{
 		*x.at(i) = x.at(i)->get9Compliment();
@@ -183,7 +183,7 @@ UnsignedBigReal UnsignedBigReal::add(UnsignedBigReal other, bool ignoreCarry)
 {
 	normalize(*this, other);
 	BCDDigit carry;
-	int start = size() - 1;
+	int start = digitCount() - 1;
 	for (int i = start; i >= 0; i--)
 	{
 		*other.at(i) = BCDDigit::add(*this->at(i), *other.at(i), carry, carry);
