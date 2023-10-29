@@ -13,5 +13,6 @@ int main()
 {	
 	UnsignedBigReal x, y;
 	cin >> x >> y;
-	cout << (x - y);
+	x + y;
+	cout << x - y;
 }

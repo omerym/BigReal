@@ -29,17 +29,18 @@ public:
 	bool operator== (UnsignedBigReal anotherReal);
 	friend istream& operator >> (istream& in, UnsignedBigReal &num);
 	friend ostream& operator << (ostream& out, UnsignedBigReal num);
-	UnsignedBigReal get9Compliment();
+	UnsignedBigReal getCompliment();
 private:
-	deque<PackedBCD> integer;
-	deque<PackedBCD> fraction;
+	deque<BCDDigit> integer;
+	deque<BCDDigit> fraction;
 	bool isValidUnsignedReal(string realNumber);
-	PackedBCD* at(int pos);
-	UnsignedBigReal add(UnsignedBigReal other);
+	BCDDigit* at(int pos);
+	UnsignedBigReal getZeros();
+	UnsignedBigReal add(UnsignedBigReal other, bool ignoreCarry = false);
 	// Removes extra zeros
 	void clean();
 	// 1 if > , 0 if == , -1 if <
-	static int compare(UnsignedBigReal &r, UnsignedBigReal &l);
+	static int compare(UnsignedBigReal& r, UnsignedBigReal& l);
 	// add zeros to the right or to the left until both numbers have similar size
 	static void normalize(UnsignedBigReal& r, UnsignedBigReal& l);
 };
@@ -49,8 +50,8 @@ UnsignedBigReal::UnsignedBigReal(string realNumber)
 }
 UnsignedBigReal::UnsignedBigReal(const UnsignedBigReal& other)
 {
-	integer = deque<PackedBCD>(other.integer);
-	fraction = deque<PackedBCD>(other.fraction);
+	integer = deque<BCDDigit>(other.integer);
+	fraction = deque<BCDDigit>(other.fraction);
 }
 void UnsignedBigReal::setNum(string realNumber)
 {
@@ -65,55 +66,25 @@ void UnsignedBigReal::setNum(string realNumber)
 	string fractionNumber = dotPos < realNumber.length() - 1 ? realNumber.substr(dotPos + 1) : "";
 	for (int i = integerNumber.length() - 1; i >= 0; i--)
 	{
-		if (i - 1 >= 0)
-		{
-			PackedBCD p = PackedBCD(integerNumber[i] - '0', integerNumber[i - 1] - '0');
-			integer.push_front(p);
-			i--;
-		}
-		else
-		{
-			PackedBCD p = PackedBCD(integerNumber[i] - '0');
-			integer.push_front(p);
-		}
+		BCDDigit p = BCDDigit(integerNumber[i] - '0');
+		integer.push_front(p);
 	}
 	for (int i = 0; i < fractionNumber.length(); i++)
 	{
-		if (i + 1 < fractionNumber.length())
-		{
-			PackedBCD p = PackedBCD(fractionNumber[i + 1] - '0', fractionNumber[i] - '0');
-			fraction.push_back(p);
-			i++;
-		}
-		else
-		{
-			PackedBCD p = PackedBCD(0, fractionNumber[i] - '0');
-			fraction.push_back(p);
-		}
+		BCDDigit p = BCDDigit(fractionNumber[i] - '0');
+		fraction.push_back(p);
+
 	}
 	clean();
 }
 int UnsignedBigReal::size()
 {
-	int size =  integer.size() + fraction.size();
-	size *= 2;
-	if (integer.size() != 0)
-	{
-		size += integer[0].digitCount() - 2;
-	}
-	if (fraction.size() != 0)
-	{
-		PackedBCD lastDigit = fraction[fraction.size() - 1];
-		if ((lastDigit.getNumber() % 10) == 0)
-		{
-			size--;
-		}
-	}
-	return size;
+	return integer.size() + fraction.size();
 }
 UnsignedBigReal UnsignedBigReal::operator-(UnsignedBigReal other)
 {
-	UnsignedBigReal compliment, result;
+	normalize(*this, other);
+	UnsignedBigReal compliment = other.getCompliment();
 	int compare = UnsignedBigReal::compare(*this, other);
 	if (compare == -1)
 	{
@@ -123,8 +94,7 @@ UnsignedBigReal UnsignedBigReal::operator-(UnsignedBigReal other)
 	{
 		//return 0;
 	}
-
-	return result;
+	return add(compliment, true);
 }
 UnsignedBigReal UnsignedBigReal::operator+(UnsignedBigReal other)
 {
@@ -150,47 +120,22 @@ bool UnsignedBigReal::operator<(UnsignedBigReal anotherReal)
 }
 bool UnsignedBigReal::operator!=(UnsignedBigReal anotherReal)
 {
-	if (integer.size() != anotherReal.integer.size() || fraction.size() != anotherReal.fraction.size())
-	{
-		return true;
-	}
-	for (int i = 0; i < integer.size(); i++)
-	{
-		if (integer[i] != anotherReal.integer[i])
-		{
-			return true;
-		}
-	}
-	for (int i = 0; i < fraction.size(); i++)
-	{
-		if (fraction[i] != anotherReal.fraction[i])
-		{
-			return true;
-		}
-	}
-	return false;
+	return compare(*this, anotherReal) != 0;
 }
 bool UnsignedBigReal::operator==(UnsignedBigReal anotherReal)
 {
-	if (integer.size() != anotherReal.integer.size() || fraction.size() != anotherReal.fraction.size())
+	return compare(*this, anotherReal) == 0;
+}
+UnsignedBigReal UnsignedBigReal::getCompliment()
+{
+	UnsignedBigReal x = *this, correction = getZeros();
+	*correction.at(correction.size() - 1) = 1;
+	int start = size() - 1;
+	for (int i = start; i >= 0; i--)
 	{
-		return false;
+		*x.at(i) = x.at(i)->get9Compliment();
 	}
-	for (int i = 0; i < integer.size(); i++)
-	{
-		if (integer[i] != anotherReal.integer[i])
-		{
-			return false;
-		}
-	}
-	for (int i = 0; i < fraction.size(); i++)
-	{
-		if (fraction[i] != anotherReal.fraction[i])
-		{
-			return false;
-		}
-	}
-	return true;
+	return x.add(correction,true);
 }
 bool UnsignedBigReal::isValidUnsignedReal(string realNumber)
 {
@@ -213,7 +158,7 @@ bool UnsignedBigReal::isValidUnsignedReal(string realNumber)
 	return true;
 }
 
-PackedBCD* UnsignedBigReal::at(int pos)
+BCDDigit* UnsignedBigReal::at(int pos)
 {
 	if (pos < integer.size())
 	{
@@ -227,61 +172,29 @@ PackedBCD* UnsignedBigReal::at(int pos)
 	throw out_of_range(to_string(pos));
 }
 
-UnsignedBigReal UnsignedBigReal::add(UnsignedBigReal other)
+UnsignedBigReal UnsignedBigReal::getZeros()
+{
+	UnsignedBigReal zeros;
+	normalize(*this, zeros);
+	return zeros;
+}
+
+UnsignedBigReal UnsignedBigReal::add(UnsignedBigReal other, bool ignoreCarry)
 {
 	normalize(*this, other);
-	this->integer.push_front(0);
-	other.integer.push_front(0);
-	UnsignedBigReal result;
 	BCDDigit carry;
-	for (int i = fraction.size() - 1; i >= 0; i--)
+	int start = size() - 1;
+	for (int i = start; i >= 0; i--)
 	{
-		PackedBCD s = PackedBCD::add(fraction[i], other.fraction[i], carry, carry);
-		result.fraction.push_front(s);
+		*other.at(i) = BCDDigit::add(*this->at(i), *other.at(i), carry, carry);
 	}
-	for (int i = integer.size() - 1; i >= 0; i--)
+	if (!ignoreCarry)
 	{
-		PackedBCD s = PackedBCD::add(integer[i], other.integer[i], carry, carry);
-		result.integer.push_front(s);
+		other.integer.push_front(carry);
 	}
 	clean();
 	other.clean();
-	result.clean();
-	return result;
-}
-
-UnsignedBigReal UnsignedBigReal::get9Compliment()
-{
-	UnsignedBigReal compliment = UnsignedBigReal(*this);
-	int start = integer.empty() ? 0 : 1;
-	for (int i = start; i < integer.size() + fraction.size(); i++)
-	{
-		*compliment.at(i) = compliment.at(i)->get9Compliment();
-	}
-	if (!fraction.empty())
-	{
-		PackedBCD lastDigit = fraction[fraction.size() - 1];
-		unsigned int lastDigitNum = lastDigit.getNumber();
-		if ((lastDigitNum % 10) == 0)
-		{
-			unsigned int x = compliment.fraction[compliment.fraction.size() - 1].getNumber();
-			x -= 9;
-			compliment.fraction[compliment.fraction.size() - 1] = x;
-		}
-	}
-	if (!integer.empty())
-	{
-		if (integer[0] >= 10)
-		{
-			compliment.integer[0] = integer[0].get9Compliment();
-		}
-		else
-		{
-			BCDDigit a = integer[0].getNumber();
-			compliment.integer[0] = a.get9Compliment();
-		}
-	}
-	return compliment;
+	return other;
 }
 
 void UnsignedBigReal::clean()
@@ -390,8 +303,7 @@ ostream& operator<<(ostream& out, UnsignedBigReal num)
 	}
 	else
 	{
-		out << num.integer[0].getNumber();
-		for (int i = 1; i < num.integer.size(); i++)
+		for (int i = 0; i < num.integer.size(); i++)
 		{
 			out << num.integer[i];
 		}
@@ -403,23 +315,13 @@ ostream& operator<<(ostream& out, UnsignedBigReal num)
 	}
 	else
 	{
-		for (int i = 0; i < num.fraction.size() - 1; i++)
+		for (int i = 0; i < num.fraction.size(); i++)
 		{
 			out << num.fraction[i];
-		}
-		PackedBCD lastDigit = num.fraction[num.fraction.size() - 1];
-		if ((lastDigit.getNumber() % 10) == 0)
-		{
-			out << lastDigit.getNumber() / 10;
-		}
-		else
-		{
-			out << lastDigit;
 		}
 
 	}
 	return out;
 }
-
 
 #endif // !_UnsignedBigReal
