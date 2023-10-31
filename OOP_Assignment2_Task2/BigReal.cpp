@@ -10,7 +10,19 @@
 using namespace std;
  
  class BigReal : UnsignedBigReal{
-    
+    bool SignValue;
+    UnsignedBigReal BigRealValue;
     public:
+    void SetSignValue(bool Sign);
+    BigReal() : SignValue(true){};  
+
+    BigReal(bool Sign): SignValue(Sign){};
+    void SetSignValue(bool Sign)
+    {
+    SignValue=Sign;
+    }
+    
+
+    
  };
 #endif //BigReal
