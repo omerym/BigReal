@@ -11,6 +11,9 @@ using namespace std;
 class UnsignedBigReal
 {
 public:
+	static int comparePublic(UnsignedBigReal& r, UnsignedBigReal& l){
+		return compare(r,l);
+	}
 	UnsignedBigReal(string realNumber);
 	UnsignedBigReal(const char* realNumber) : UnsignedBigReal(string(realNumber)) {}
 	UnsignedBigReal(double realNumber = 0.0) :UnsignedBigReal(to_string(realNumber)) {};
