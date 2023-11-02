@@ -5,7 +5,6 @@
 #include <string>
 #include <deque>
 #include "BCDDigit.cpp"
-#include "PackedBCD.cpp"
 using namespace std;
 
 class UnsignedBigReal
