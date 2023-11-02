@@ -43,8 +43,15 @@ using namespace std;
    BigReal Value;
 	if (SignValue == other.SignValue)
 	{
-		Value.BigRealValue=  BigRealValue-other.BigRealValue;
-      if(Value.BigRealValue!=0)Value.SetSignValue(SignValue);
+      if(BigRealValue>other.BigRealValue)
+         {
+            Value.BigRealValue=  BigRealValue-other.BigRealValue;
+         }
+         else
+         {
+            Value.BigRealValue= other.BigRealValue-BigRealValue;
+         }
+      Value.SetSignValue(SignValue);
 	}
 	else
 	{
@@ -72,15 +79,15 @@ BigReal BigReal::operator+(BigReal other)
 	}
 	else
 	{
-		Value.BigRealValue = BigRealValue-other.BigRealValue;
-       
-         if(BigRealValue>other.BigRealValue)
+      if(BigRealValue>other.BigRealValue)
          {
             Value.SetSignValue(SignValue);
+            Value.BigRealValue = BigRealValue-other.BigRealValue;
          }
          else
          {
             Value.SetSignValue(!SignValue);
+            Value.BigRealValue = other.BigRealValue-BigRealValue;
          }
 	}
 	return Value;

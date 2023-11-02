@@ -13,12 +13,5 @@ int main()
 {	
 	BigReal x, y;
 	cin >> x >> y;
-	if(x!=y)
-	{
-		cout<<"working";
-	}
-	else
-	{
-	 cout<<"fail";
-	}
+	cout<<x-y;
 }
