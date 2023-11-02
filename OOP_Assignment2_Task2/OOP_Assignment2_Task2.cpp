@@ -6,13 +6,20 @@
 #include "PackedBCD.cpp"
 #include "UnsignedBigReal.cpp"
 #include <random>
+#include "BigReal.cpp"
 
 using namespace std;
 
 int main()
 {	
-	UnsignedBigReal x, y;
+	BigReal x, y;
 	cin >> x >> y;
-	x + y;
-	cout << x - y;
+	if(x!=y)
+	{
+		cout<<"working";
+	}
+	else
+	{
+	 cout<<"fail";
+	}
 }
