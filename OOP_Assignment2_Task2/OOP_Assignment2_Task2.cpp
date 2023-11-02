@@ -15,5 +15,5 @@ int main()
 	BigReal x, y;
 	cin >> x >> y;
 	x + y;
-	cout << x - y;
+	cout << x + y;
 }

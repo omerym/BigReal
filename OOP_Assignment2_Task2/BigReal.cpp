@@ -93,7 +93,10 @@ istream& operator>>(istream& in, BigReal& num)
 
 ostream& operator<<(ostream& out, BigReal num)
 {
-	out<<num.SignValue;
+	if(num.SignValue)
+   {
+      out<<'-';
+   }
    out<<num.BigRealValue;
 	return out;
 }
