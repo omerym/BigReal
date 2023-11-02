@@ -37,6 +37,7 @@ using namespace std;
 	 friend ostream& operator << (ostream& out, BigReal num);
     
  };
+ //TODO: fix the - logic
  BigReal BigReal::operator-(BigReal other)
 {
    BigReal Value;
@@ -59,6 +60,7 @@ using namespace std;
 	}
 	return Value;
 }
+//TODO: fix the + logic
 BigReal BigReal::operator+(BigReal other)
 {
    BigReal Value;
