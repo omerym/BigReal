@@ -3,13 +3,19 @@
 
 #include <iostream>
 #include "BCDDigit.cpp"
-#include "PackedBCD.cpp"
 #include "UnsignedBigReal.cpp"
 #include <random>
+#include "BigReal.cpp"
 
 using namespace std;
 
 int main()
 {	
+<<<<<<< HEAD
 
+=======
+	BigReal x, y;
+	cin >> x >> y;
+	cout<<x-y;
+>>>>>>> cb8f2c67f581720d6dd55b0268e1249411c1f92e
 }

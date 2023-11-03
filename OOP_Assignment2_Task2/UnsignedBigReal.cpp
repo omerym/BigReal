@@ -5,20 +5,27 @@
 #include <string>
 #include <deque>
 #include "BCDDigit.cpp"
-#include "PackedBCD.cpp"
 using namespace std;
 
 class UnsignedBigReal
 {
 public:
+	static int comparePublic(UnsignedBigReal& r, UnsignedBigReal& l){
+		return compare(r,l);
+	}
 	UnsignedBigReal(string realNumber);
 	UnsignedBigReal(const char* realNumber) : UnsignedBigReal(string(realNumber)) {}
 	UnsignedBigReal(double realNumber = 0.0) :UnsignedBigReal(to_string(realNumber)) {};
 	UnsignedBigReal(unsigned int realNumber) :UnsignedBigReal(to_string(realNumber)) {};
 	UnsignedBigReal(int realNumber) :UnsignedBigReal(to_string(realNumber)) {};
 	UnsignedBigReal(const UnsignedBigReal& other);
+<<<<<<< HEAD
 	void setNum(string realNumber);
 	int digitCount();
+=======
+	virtual void setNum(string realNumber);
+	int size();
+>>>>>>> cb8f2c67f581720d6dd55b0268e1249411c1f92e
 	UnsignedBigReal operator- (UnsignedBigReal other);
 	UnsignedBigReal operator+(UnsignedBigReal other);
 	bool operator>= (UnsignedBigReal anotherReal);
@@ -30,6 +37,9 @@ public:
 	friend istream& operator >> (istream& in, UnsignedBigReal &num);
 	friend ostream& operator << (ostream& out, UnsignedBigReal num);
 	UnsignedBigReal getCompliment();
+	BCDDigit GetSignValue(){
+		return integer[0];
+	}
 private:
 	deque<BCDDigit> integer;
 	deque<BCDDigit> fraction;
