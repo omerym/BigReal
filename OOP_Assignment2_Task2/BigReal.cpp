@@ -13,8 +13,11 @@ class BigReal {
     bool isNegative;
     UnsignedBigReal value;
 public:
-    BigReal() : isNegative(false) {};
-    BigReal(UnsignedBigReal BigRealValue);
+    BigReal(string realNumber) { setNum(realNumber); }
+    BigReal(const char* realNumber) : BigReal(string(realNumber)) {}
+    BigReal(double realNumber = 0.0) :BigReal(to_string(realNumber)) {}
+    BigReal(unsigned int realNumber) :BigReal(to_string(realNumber)) {}
+    BigReal(int realNumber) :BigReal(to_string(realNumber)) {}
     void setNum(string s);
     static bool isValidBigReal(string s);
     BigReal operator- (BigReal other);
