@@ -14,13 +14,13 @@ public:
 	unsigned int getDigit();
 	BCDDigit get9Compliment();
 	BCDDigit get10Compliment();
-	BCDDigit operator+ (BCDDigit other);
-	bool operator == (BCDDigit other);
-	bool operator != (BCDDigit other);
-	bool operator > (BCDDigit other);
-	bool operator < (BCDDigit other);
-	bool operator <= (BCDDigit other);
-	bool operator >= (BCDDigit other);
+	BCDDigit operator+ (BCDDigit other) const;
+	bool operator == (BCDDigit other) const;
+	bool operator != (BCDDigit other) const;
+	bool operator > (BCDDigit other) const;
+	bool operator < (BCDDigit other) const;
+	bool operator <= (BCDDigit other) const;
+	bool operator >= (BCDDigit other) const;
 	friend ostream& operator << (ostream& out, BCDDigit num);
 	friend istream& operator >> (istream& in, BCDDigit &num);
 
@@ -50,32 +50,32 @@ BCDDigit BCDDigit::add(BCDDigit r, BCDDigit l, BCDDigit& carryOut, BCDDigit carr
 	}
 	return BCDDigit(result);
 }
-BCDDigit BCDDigit::operator+(BCDDigit other)
+BCDDigit BCDDigit::operator+(BCDDigit other) const
 {
 	BCDDigit c;
 	return add(*this, other, c);
 }
-bool BCDDigit::operator==(BCDDigit other)
+bool BCDDigit::operator==(BCDDigit other) const
 {
 	return digit == other.digit;
 }
-bool BCDDigit::operator!=(BCDDigit other)
+bool BCDDigit::operator!=(BCDDigit other) const
 {
 	return digit != other.digit;
 }
-bool BCDDigit::operator>(BCDDigit other)
+bool BCDDigit::operator>(BCDDigit other) const
 {
 	return digit > other.digit;
 }
-bool BCDDigit::operator<(BCDDigit other)
+bool BCDDigit::operator<(BCDDigit other) const
 {
 	return digit < other.digit;
 }
-bool BCDDigit::operator<=(BCDDigit other)
+bool BCDDigit::operator<=(BCDDigit other) const
 {
 	return digit <= other.digit;
 }
-bool BCDDigit::operator>=(BCDDigit other)
+bool BCDDigit::operator>=(BCDDigit other) const
 {
 	return digit >= other.digit;
 }

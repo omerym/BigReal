@@ -11,7 +11,7 @@ using namespace std;
 
 int main()
 {	
-	BigReal x;
-	cin >> x;
-	cout << (x - 324.124);
+	BigReal x, y;
+	cin >> x >> y;
+	cout << (x - y);
 }

@@ -11,7 +11,9 @@ class UnsignedBigReal
 {
 public:
 	// 1 if > , 0 if == , -1 if <
-	static int compare(UnsignedBigReal& r, UnsignedBigReal& l);
+	static int compare(const UnsignedBigReal& r, const UnsignedBigReal& l);
+	static UnsignedBigReal& max(UnsignedBigReal & r, UnsignedBigReal& l);
+	static UnsignedBigReal& min(UnsignedBigReal& r, UnsignedBigReal& l);
 	static bool isValidUnsignedReal(string realNumber);
 	UnsignedBigReal(string realNumber);
 	UnsignedBigReal(const char* realNumber) : UnsignedBigReal(string(realNumber)) {}
@@ -24,12 +26,12 @@ public:
 	int size();
 	UnsignedBigReal operator- (UnsignedBigReal other);
 	UnsignedBigReal operator+(UnsignedBigReal other);
-	bool operator>= (UnsignedBigReal anotherReal);
-	bool operator<= (UnsignedBigReal anotherReal);
-	bool operator> (UnsignedBigReal anotherReal);
-	bool operator< (UnsignedBigReal anotherReal);
-	bool operator!= (UnsignedBigReal anotherReal);
-	bool operator== (UnsignedBigReal anotherReal);
+	bool operator>= (UnsignedBigReal anotherReal) const;
+	bool operator<= (UnsignedBigReal anotherReal) const;
+	bool operator> (UnsignedBigReal anotherReal) const;
+	bool operator< (UnsignedBigReal anotherReal) const;
+	bool operator!= (UnsignedBigReal anotherReal) const;
+	bool operator== (UnsignedBigReal anotherReal) const;
 	friend istream& operator >> (istream& in, UnsignedBigReal &num);
 	friend ostream& operator << (ostream& out, UnsignedBigReal num);
 	UnsignedBigReal getCompliment();
@@ -107,29 +109,29 @@ UnsignedBigReal UnsignedBigReal::operator+(UnsignedBigReal other)
 {
 	return add(other);
 }
-bool UnsignedBigReal::operator>=(UnsignedBigReal anotherReal)
+bool UnsignedBigReal::operator>=(UnsignedBigReal anotherReal) const
 {
 	int c = compare(*this, anotherReal);
 	return c >= 0;
 }
-bool UnsignedBigReal::operator<=(UnsignedBigReal anotherReal)
+bool UnsignedBigReal::operator<=(UnsignedBigReal anotherReal) const
 {
 	int c = compare(*this, anotherReal);
 	return c <= 0;
 }
-bool UnsignedBigReal::operator>(UnsignedBigReal anotherReal)
+bool UnsignedBigReal::operator>(UnsignedBigReal anotherReal) const
 {
 	return compare(*this, anotherReal) == 1;
 }
-bool UnsignedBigReal::operator<(UnsignedBigReal anotherReal)
+bool UnsignedBigReal::operator<(UnsignedBigReal anotherReal) const
 {
 	return compare(*this, anotherReal) == -1;
 }
-bool UnsignedBigReal::operator!=(UnsignedBigReal anotherReal)
+bool UnsignedBigReal::operator!=(UnsignedBigReal anotherReal) const
 {
 	return compare(*this, anotherReal) != 0;
 }
-bool UnsignedBigReal::operator==(UnsignedBigReal anotherReal)
+bool UnsignedBigReal::operator==(UnsignedBigReal anotherReal) const
 {
 	return compare(*this, anotherReal) == 0;
 }
@@ -231,7 +233,7 @@ void UnsignedBigReal::clean()
 	}
 }
 
-int UnsignedBigReal::compare(UnsignedBigReal &r, UnsignedBigReal &l)
+int UnsignedBigReal::compare(const UnsignedBigReal &r, const UnsignedBigReal &l)
 {
 	if (r.integer.size() > l.integer.size())
 	{
@@ -274,6 +276,24 @@ int UnsignedBigReal::compare(UnsignedBigReal &r, UnsignedBigReal &l)
 		return -1;
 	}
 	return 0;
+}
+
+UnsignedBigReal& UnsignedBigReal::max(UnsignedBigReal& r, UnsignedBigReal& l)
+{
+	if (r > l)
+	{
+		return r;
+	}
+	return l;
+}
+
+UnsignedBigReal& UnsignedBigReal::min(UnsignedBigReal& r, UnsignedBigReal& l)
+{
+	if (r < l)
+	{
+		return r;
+	}
+	return l;
 }
 
 void UnsignedBigReal::normalize(UnsignedBigReal& r, UnsignedBigReal& l)
