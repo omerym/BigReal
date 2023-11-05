@@ -9,64 +9,65 @@
 #include "UnsignedBigReal.cpp"
 using namespace std;
  
- class BigReal{
+class BigReal {
     bool isNegative;
-    UnsignedBigReal BigRealValue;
-        void SetSignValue(bool Sign)
-    {
-        isNegative = Sign;
-    }
-    void SetBigRealValue(const UnsignedBigReal& value) {
-        BigRealValue = value;
-    }
-    public: 
-    BigReal() : isNegative(false){};  
-
+    UnsignedBigReal value;
+public:
+    BigReal() : isNegative(false) {};
     BigReal(UnsignedBigReal BigRealValue);
-    
+    void setNum(string s);
+    static bool isValidBigReal(string s);
     BigReal operator- (BigReal other);
-	 BigReal operator+(BigReal other);
-	 bool operator>= (BigReal anotherReal);
-	 bool operator<= (BigReal anotherReal);
-	 bool operator> (BigReal anotherReal);
-	 bool operator< (BigReal anotherReal);
-	 bool operator!= (BigReal anotherReal);
-	 bool operator== (BigReal anotherReal);
-	 friend istream& operator >> (istream& in, BigReal &num);
-	 friend ostream& operator << (ostream& out, BigReal num);
-    
-    
- };
+    BigReal operator- ();
+    BigReal operator+(BigReal other);
+    bool operator>= (BigReal anotherReal);
+    bool operator<= (BigReal anotherReal);
+    bool operator> (BigReal anotherReal);
+    bool operator< (BigReal anotherReal);
+    bool operator!= (BigReal anotherReal);
+    bool operator== (BigReal anotherReal);
+    friend ostream& operator << (ostream& out, BigReal num);
 
- BigReal BigReal::operator-(BigReal other)
+
+};
+
+void BigReal::setNum(string s)
 {
-   BigReal Value;
-	if (isNegative == other.isNegative)
-	{
-      if(BigRealValue>other.BigRealValue)
-         {
-            Value.BigRealValue=  BigRealValue-other.BigRealValue;
-         }
-         else
-         {
-            Value.BigRealValue= other.BigRealValue-BigRealValue;
-         }
-      Value.SetSignValue(isNegative);
-	}
-	else
-	{
-		Value.BigRealValue = BigRealValue+other.BigRealValue;
-       
-         if(BigRealValue>other.BigRealValue)
-         {
-            Value.SetSignValue(isNegative);
-         }
-         else
-         {
-            Value.SetSignValue(!isNegative);
-         }
-	}
-	return Value;
+    if (!isValidBigReal(s))
+    {
+        throw invalid_argument("invalid real number");
+    }
+    if (s[0] == '+' || s[0] == '-')
+    {
+        isNegative = s[0] == '-';
+        value.setNum(s.substr(1));
+    }
+    else
+    {
+        isNegative = false;
+        value.setNum(s);
+    }
+}
+
+bool BigReal::isValidBigReal(string s)
+{
+    if (s[0] == '+' || s[0] == '-')
+    {
+        return UnsignedBigReal::isValidUnsignedReal(s.substr(1));
+    }
+    return UnsignedBigReal::isValidUnsignedReal(s);
+}
+
+BigReal BigReal::operator-(BigReal other)
+{
+    return *this + -other;
+}
+
+BigReal BigReal::operator-()
+{
+    BigReal negative = *this;
+    negative.isNegative = !isNegative;
+    return negative;
 }
 
 BigReal BigReal::operator+(BigReal other)
@@ -74,20 +75,20 @@ BigReal BigReal::operator+(BigReal other)
    BigReal Value;
    if (isNegative == other.isNegative)
 	{
-		Value.BigRealValue=  BigRealValue+other.BigRealValue;
-      Value.SetSignValue(isNegative);
+		Value.value=  value+other.value;
+      Value.isNegative = isNegative;
 	}
 	else
 	{
-      if(BigRealValue>other.BigRealValue)
+      if(value>other.value)
          {
-            Value.SetSignValue(isNegative);
-            Value.BigRealValue = BigRealValue-other.BigRealValue;
+            Value.isNegative = isNegative;
+            Value.value = value-other.value;
          }
          else
          {
-            Value.SetSignValue(!isNegative);
-            Value.BigRealValue = other.BigRealValue-BigRealValue;
+            Value.isNegative = !isNegative;
+            Value.value = other.value-value;
          }
 	}
 	return Value;
@@ -103,7 +104,7 @@ bool BigReal::operator>=(BigReal anotherReal)
     {
         return false;
     }
-    int c = BigRealValue.compare(BigRealValue, anotherReal.BigRealValue);
+    int c = value.compare(value, anotherReal.value);
     return c >= 0;
 
 }
@@ -117,7 +118,7 @@ bool BigReal::operator<=(BigReal anotherReal)
     {
         return true;
     }
-    int c = BigRealValue.compare(BigRealValue, anotherReal.BigRealValue);
+    int c = value.compare(value, anotherReal.value);
     return c <= 0;
 }
 bool BigReal::operator>(BigReal anotherReal)
@@ -130,7 +131,7 @@ bool BigReal::operator>(BigReal anotherReal)
     {
         return false;
     }
-    return BigRealValue.compare(BigRealValue, anotherReal.BigRealValue) == 1;
+    return value.compare(value, anotherReal.value) == 1;
 }
 bool BigReal::operator<(BigReal anotherReal)
 {
@@ -142,13 +143,13 @@ bool BigReal::operator<(BigReal anotherReal)
     {
         return true;
     }
-    return BigRealValue.compare(BigRealValue, anotherReal.BigRealValue) == -1;
+    return value.compare(value, anotherReal.value) == -1;
 }
 bool BigReal::operator!=(BigReal anotherReal)
 {
     if (isNegative == anotherReal.isNegative)
     {
-        return BigRealValue.compare(BigRealValue, anotherReal.BigRealValue) != 0;
+        return value.compare(value, anotherReal.value) != 0;
     }
     return true;
 }
@@ -156,7 +157,7 @@ bool BigReal::operator==(BigReal anotherReal)
 {
     if (isNegative == anotherReal.isNegative)
     {
-        return BigRealValue.compare(BigRealValue, anotherReal.BigRealValue) == 0;
+        return value.compare(value, anotherReal.value) == 0;
     }
     else
     {
@@ -167,25 +168,17 @@ istream& operator>>(istream& in, BigReal& num)
 {
 	string s;
 	in >> s;
-   if(s[0]=='-')
-   {
-      num.SetSignValue(s[0]);
-      num.SetBigRealValue(s.substr(1,s.size()-1));
-   }
-   else
-   {
-      num.SetBigRealValue(s);
-   }
+    num.setNum(s);
 	return in;
 }
 
 ostream& operator<<(ostream& out, BigReal num)
 {
-    if (num.isNegative && num.BigRealValue != 0)
+    if (num.isNegative && num.value != 0)
     {
         out << '-';
     }
-    out << num.BigRealValue;
+    out << num.value;
     return out;
 }
 

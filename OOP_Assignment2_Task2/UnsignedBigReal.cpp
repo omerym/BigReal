@@ -12,6 +12,7 @@ class UnsignedBigReal
 public:
 	// 1 if > , 0 if == , -1 if <
 	static int compare(UnsignedBigReal& r, UnsignedBigReal& l);
+	static bool isValidUnsignedReal(string realNumber);
 	UnsignedBigReal(string realNumber);
 	UnsignedBigReal(const char* realNumber) : UnsignedBigReal(string(realNumber)) {}
 	UnsignedBigReal(double realNumber = 0.0) :UnsignedBigReal(to_string(realNumber)) {};
@@ -38,7 +39,6 @@ public:
 private:
 	deque<BCDDigit> integer;
 	deque<BCDDigit> fraction;
-	bool isValidUnsignedReal(string realNumber);
 	BCDDigit* at(int pos);
 	UnsignedBigReal getZeros();
 	UnsignedBigReal add(UnsignedBigReal other, bool ignoreCarry = false);

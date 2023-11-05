@@ -11,7 +11,7 @@ using namespace std;
 
 int main()
 {	
-	UnsignedBigReal x, y;
+	BigReal x, y;
 	cin >> x >> y;
-	cout << x - y;
+	cout << (x < y);
 }
