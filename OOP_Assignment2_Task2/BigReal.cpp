@@ -19,7 +19,7 @@ using namespace std;
     void SetBigRealValue(const UnsignedBigReal& value) {
         BigRealValue = value;
     }
-    public:
+    public: 
     BigReal() : isNegative(false){};  
 
     BigReal(UnsignedBigReal BigRealValue);
