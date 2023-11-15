@@ -10,8 +10,21 @@
 using namespace std;
 
 int main()
-{	
+{
 	BigReal x, y;
 	cin >> x >> y;
-	cout << (x - y);
+	if (x < y)
+	{
+		cout << x << " < " << y << endl;
+	}
+	if (x > y)
+	{
+		cout << x << " > " << y << endl;
+	}
+	if (x == y)
+	{
+		cout << x << " = " << y << endl;
+	}
+	cout << x << " + " << y << " = " << (x + y) << endl;
+	cout << x << " - " << y << " = " << (x - y) << endl;
 }
