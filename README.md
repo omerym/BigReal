@@ -1,4 +1,4 @@
-BigReal Data Type:
+## BigReal Data Type:
 
 BigReal is a custom data type designed to handle arbitrary precision real numbers in C++. It offers a range of operations including addition, subtraction, and comparison. Here are some key features of BigReal:
 
